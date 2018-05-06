@@ -25,7 +25,16 @@ if __name__ == "__main__":
 
 def cnn_model_fn(features, labels, mode):
   """Model function for CNN."""
-  # Input Layer
+  '''
+  two dimensional image convolutional layers: [batch_size, image_height, image_width, channels]
+  batch_size = size of subsets to use during training's gradient Descent
+    (-1 when infered on feature input values)
+  channels = # of color channels in example
+  data_format = "channels_last/channels_first"
+  Since input format is 28x28 pixel images, shape of input layer is [batch_size,28,28,1]
+
+  '''
+# Input Layer, converts feature map to this shape
   input_layer = tf.reshape(features["x"], [-1, 28, 28, 1])
 
 # Convolutional Layer #1, applies 32 5x5 filters with ReLU activ. func
