@@ -31,3 +31,38 @@ sess.close()
 
 # use tensorboard --logdir=mygraph and navigate to http://127.0.0.1:6006 to tensorboard
 '''
+
+#Example 3 - Building a Linear Model
+sess = tf.Session()
+
+W = tf.Variable([.3], tf.float32)
+b = tf.Variable([-.3], tf.float32)
+x = tf.placeholder(tf.float32)
+linear_model = W * x + b
+
+#because we are initalizing variables, not contstants/placeholders
+init = tf.global_variables_initializer()
+sess.run(init)
+
+print(sess.run(linear_model, {x:[1,2,3,4]}))
+# Output: [0.         0.3        0.6        0.90000004]
+
+y = tf.placeholder(tf.float32)
+squared_deltas = tf.square(linear_model - y) #takes SE
+loss = tf.reduce_sum(squared_deltas) # Mean of SE
+print(sess.run(loss, {x:[1,2,3,4], y:[0,-1,-2,-3]}))
+# Output: 23.66
+
+fixW = tf.assign(W, [-1.]) #array of type float32
+fixb = tf.assign(b, [1.])
+sess.run([fixW,fixb])
+print(sess.run(loss, {x:[1,2,3,4], y:[0,-1,-2,-3]}))
+
+optimizer = tf.train.GradientDescentOptimizer(0.01)
+train = optimizer.minimize(loss)
+
+sess.run(init)
+
+for i in range(1000):
+    sess.run(train, {x:[1,2,3,4], y:[0,-1,-2,-3]})
+print(sess.run([W,b]))
